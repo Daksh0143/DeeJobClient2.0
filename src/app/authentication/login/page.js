@@ -5,6 +5,9 @@ import { Box, Button, Grid, Paper, Typography } from '@mui/material'
 import { useRouter } from "next/navigation"
 import { useFormik } from "formik"
 import * as Yup from "yup"
+import { useDispatch } from 'react-redux'
+import { loginUserAction } from '@/redux/user/user.middleware'
+import JobDropDown from '@/Common/JobDropDown'
 
 export const loginSchema = Yup.object().shape({
     email: Yup.string()
@@ -18,20 +21,40 @@ export const loginSchema = Yup.object().shape({
             'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'
         )
         .required('Password is required'),
+    role: Yup.string()
+        .required('Role is required'),
 });
 
 const Login = () => {
+    const dispatch = useDispatch()
     const router = useRouter()
     const { initialValues, errors, values, handleChange, handleSubmit, handleBlur, handleReset, touched } = useFormik({
         initialValues: {
             email: "",
-            password: ""
+            password: "",
+            role: ""
         },
         validationSchema: loginSchema,
         onSubmit: (value) => {
-            console.log("VALUES", values)
+            dispatch(loginUserAction(value)).then((result) => {
+                if (result.payload.status === 200) {
+                    router.push("/")
+                }
+            }).catch((err) => {
+                console.log(":EROR", err)
+            });
         }
     })
+
+    const dropDownOption = [
+        {
+            label: "Job Seeker", value: "Job Seeker"
+        },
+        {
+            label: "Employer", value: "Employer"
+        }
+    ]
+
     return (
         <Grid
             container
@@ -49,6 +72,17 @@ const Login = () => {
                         <Typography variant="h5" textAlign="center">
                             Login
                         </Typography>
+                        <JobDropDown
+                            name="role"
+                            label="Role"
+                            size='small'
+                            options={dropDownOption}
+                            value={values.role}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={Boolean(errors.role && touched.role)}
+                            helperText={errors.role && touched.role ? errors.role : ""}
+                        />
                         <JobTextField
                             label="Email"
                             name="email"

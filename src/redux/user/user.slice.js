@@ -1,6 +1,6 @@
 // store/features/userSlice.js
 import { createSlice } from '@reduxjs/toolkit';
-import { loginUserAction } from './user.middleware';
+import { loginUserAction, registerUserAction } from './user.middleware';
 
 const initialState = {
     User: null,
@@ -17,6 +17,8 @@ const userSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
+        //LOGIN USER
+
         builder
             .addCase(loginUserAction.pending, (state) => {
                 state.loading = true;
@@ -30,6 +32,21 @@ const userSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload?.response?.data?.message || "Login failed";
             });
+        // REGISTER
+        builder
+            .addCase(registerUserAction.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(registerUserAction.fulfilled, (state, action) => {
+                state.loading = false;
+                state.User = action.payload?.data; // or null if you want user to log in after registering
+            })
+            .addCase(registerUserAction.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload?.response?.data?.message || "Register failed";
+            });
+
     },
 });
 

@@ -1,14 +1,25 @@
 import axiosInstanse from "../../axios"
 
 const loginUrl = "/user/loginUser"
-
+const registerUrl = "user/registerUser"
 
 export const loginUserAsync = async (request) => {
     try {
         const response = await axiosInstanse.post(loginUrl, request)
         return response.data
     } catch (error) {
-        return error
+        console.log("ERROR", error)
+        return error.response
+    }
+}
+
+export const registerUserAsync = async (request) => {
+    try {
+        const response = await axiosInstanse.post(registerUrl, request)
+        console.log("response", response)
+        return response.data
+    } catch (error) {
+        return response
     }
 }
 

@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Wrapper from "./component/Wrapper";
 import Providers from "../../clientLayout";
+import { ToastContainer, toast } from 'react-toastify';
 
 
 const geistSans = Geist({
@@ -23,6 +24,7 @@ export default function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Providers>
           <Wrapper>
+            <ToastContainer position="top-right"/>
             {children}
           </Wrapper>
         </Providers>

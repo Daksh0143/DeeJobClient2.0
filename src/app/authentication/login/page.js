@@ -8,6 +8,8 @@ import * as Yup from "yup"
 import { useDispatch } from 'react-redux'
 import { loginUserAction } from '@/redux/user/user.middleware'
 import JobDropDown from '@/Common/JobDropDown'
+import { setItem } from '@/Utills/localStorage'
+import { toast } from 'react-toastify'
 
 export const loginSchema = Yup.object().shape({
     email: Yup.string()
@@ -38,9 +40,11 @@ const Login = () => {
         onSubmit: (value) => {
             dispatch(loginUserAction(value)).then((result) => {
                 if (result.payload.status === 200) {
+                    toast.success(result.payload.message)
+                    setItem("token", result.payload.data.token)
                     router.push("/")
                 }
-            }).catch((err) => {
+            }).catch((err) =>    {
                 console.log(":EROR", err)
             });
         }

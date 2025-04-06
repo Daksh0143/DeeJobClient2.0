@@ -22,6 +22,7 @@ const JobDropDown = ({
     variant = 'outlined',
     error,
     helperText,
+    sx,
 }) => {
     const labelId = `${name}-label`;
     const selectId = `${name}-select`;
@@ -32,6 +33,7 @@ const JobDropDown = ({
             size={size}
             variant={variant}
             error={error}
+            sx={{ my: 1.5, ...sx }}
         >
             <InputLabel id={labelId} shrink>
                 {label}

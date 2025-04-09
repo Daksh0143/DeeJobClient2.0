@@ -13,13 +13,15 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useRouter } from 'next/navigation';
+import { Drawer, List, ListItem, ListItemText, Stack } from '@mui/material';
 
 
 const pages = [
     { name: 'Products', path: '/products' },
     { name: 'Pricing', path: '/pricing' },
     { name: 'Blog', path: '/blog' },
-    { name: 'Login', path: 'authentication/login' }
+    { name: 'Login', path: '/authentication/login' },
+    { name: 'Jobs', path: '/jobs/create' }
 ];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
@@ -28,8 +30,11 @@ function Navbar() {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
 
+    const [drawerOpen, setDrawerOpen] = React.useState(false)
+
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
+        setDrawerOpen(true)
     };
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
@@ -52,7 +57,6 @@ function Navbar() {
                         variant="h6"
                         noWrap
                         component="a"
-                        href="#app-bar-with-responsive-menu"
                         sx={{
                             mr: 2,
                             display: { xs: 'none', md: 'flex' },
@@ -77,31 +81,35 @@ function Navbar() {
                         >
                             <MenuIcon />
                         </IconButton>
-                        <Menu
-                            id="menu-appbar"
-                            anchorEl={anchorElNav}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'left',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'left',
-                            }}
-                            open={Boolean(anchorElNav)}
-                            onClose={handleCloseNavMenu}
-                            sx={{ display: { xs: 'block', md: 'none' } }}
-                        >
-                            {pages.map((page, index) => (
-                                <MenuItem key={index} onClick={handleCloseNavMenu}>
-                                    <Typography sx={{ textAlign: 'center' }} onClick={() => {
-                                        handleCloseNavMenu();
-                                        router.push(page.path);
-                                    }} >{page.name}</Typography>
-                                </MenuItem>
-                            ))}
-                        </Menu>
+                        <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+                            <Box
+                                sx={{ width: 250 }}
+                                role="presentation"
+                            >
+                                <Stack
+                                    justifyContent="center"
+                                    alignItems="center"
+                                    flexDirection="column"
+                                    // p={3}
+                                    bgcolor="primary.main"
+                                >
+                                    <IconButton sx={{ color: "white", gap: 1 }} >
+                                        <AdbIcon />
+                                        <Typography variant="h6" textAlign="center" mt={1} color="white">
+                                            LOGO
+                                        </Typography>
+                                    </IconButton>
+
+                                </Stack>
+                                <List>
+                                    {pages.map((page, index) => (
+                                        <ListItem key={index} onClick={() => router.push(page.path)}>
+                                            <ListItemText primary={page.name} onClick={() => setDrawerOpen(false)} />
+                                        </ListItem>
+                                    ))}
+                                </List>
+                            </Box>
+                        </Drawer>
                     </Box>
                     <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
                     <Typography
@@ -166,8 +174,8 @@ function Navbar() {
                         </Menu>
                     </Box>
                 </Toolbar>
-            </Container>
-        </AppBar>
+            </Container >
+        </AppBar >
     );
 }
 export default Navbar;

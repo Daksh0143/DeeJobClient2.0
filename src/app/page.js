@@ -2,6 +2,7 @@
 
 import { useAuth } from "@/hooks/useAuth";
 import { getItem } from "@/Utills/localStorage";
+import { Grid } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -18,8 +19,8 @@ export default function Home() {
     }
   }, [])
   return (
-    <>
+    <Grid container bgcolor={"red"}>
       <h1>Daxesh Chauhan</h1>
-    </>
+    </Grid>
   );
 }

@@ -21,7 +21,7 @@ const Wrapper = ({ children }) => {
         <>
             <Navbar />
             <Grid container>
-                <Grid item sx={{ xs: 12 }}>
+                <Grid sx={{ xs: 12 }}>
                     {children}
                 </Grid>
             </Grid>

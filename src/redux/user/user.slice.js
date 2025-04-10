@@ -13,7 +13,7 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         logout: (state) => {
-            state.user = null;
+            state.User = null;
         },
     },
     extraReducers: (builder) => {

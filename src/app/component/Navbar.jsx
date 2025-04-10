@@ -14,6 +14,9 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useRouter } from 'next/navigation';
 import { Drawer, List, ListItem, ListItemText, Stack } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { logout } from '@/redux/user/user.slice';
+import { clearStorage } from '@/Utills/localStorage';
 
 
 const pages = [
@@ -23,10 +26,17 @@ const pages = [
     { name: 'Login', path: '/authentication/login' },
     { name: 'Jobs', path: '/jobs/create' }
 ];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+// const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = [
+    {
+        name: "Profile", path: "/profile",
+    },
+    { name: "Logout", path: "/authentication/login", action: "logout" }
+]
 
 function Navbar() {
     const router = useRouter()
+    const dispatch = useDispatch()
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -167,8 +177,17 @@ function Navbar() {
                             onClose={handleCloseUserMenu}
                         >
                             {settings.map((setting) => (
-                                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                    <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                                <MenuItem key={setting.name} onClick={() => {
+                                    handleCloseUserMenu()
+                                    if (setting.action === "logout") {
+                                        dispatch(logout())
+                                        clearStorage()
+                                        router.push(setting.path)
+                                    } else {
+                                        router.push(setting.path)
+                                    }
+                                }}>
+                                    <Typography sx={{ textAlign: 'center' }}>{setting.name}</Typography>
                                 </MenuItem>
                             ))}
                         </Menu>

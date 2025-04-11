@@ -1,4 +1,5 @@
-import React from 'react';
+"use client"
+import React, { useEffect, useState } from 'react';
 import {
     Avatar,
     Box,
@@ -8,9 +9,39 @@ import {
     Typography,
     Divider,
     Button,
+    CircularProgress,
 } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { profileAction } from '@/redux/user/user.middleware';
 
 const Profile = () => {
+    const dispatch = useDispatch()
+    const [profileDetails, setProfileDetails] = useState()
+    const [loading, setLoading] = useState(true);
+
+
+    useEffect(() => {
+        setLoading(true);
+        dispatch(profileAction())
+            .then((result) => {
+                setProfileDetails(result.payload.data);
+            })
+            .catch((err) => {
+                console.log("ERROR", err);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, []);
+
+    if (loading) {
+        return (
+            <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+                <CircularProgress />
+            </Box>
+        );
+    }
+
     return (
         <Grid
             container
@@ -19,15 +50,10 @@ const Profile = () => {
             justifyContent="center"
             alignItems="center"
             m={2}
-            // minHeight="100vh"
-            // bgcolor="#f5f5f5"
-            bgcolor="red"
+            bgcolor="#f5f5f5"
         >
-            <Grid
-                xs={11}
-                sm={8}
-                md={6}
-                lg={4}
+            <Grid item
+                size={{ xs: 11, sm: 8, md: 6, lg: 12 }}
                 display="flex"
                 justifyContent="center"
             >
@@ -39,10 +65,10 @@ const Profile = () => {
                             sx={{ width: 100, height: 100, mb: 2 }}
                         />
                         <Typography variant="h5" gutterBottom>
-                            John Doe
+                            {profileDetails?.name}
                         </Typography>
                         <Typography variant="body1" color="text.secondary">
-                            Frontend Developer
+                            {profileDetails.role}
                         </Typography>
                     </Box>
 
@@ -50,21 +76,19 @@ const Profile = () => {
 
                     <CardContent>
                         <Typography variant="body2" color="text.secondary" gutterBottom>
-                            Email: johndoe@example.com
+                            Email: {profileDetails.email}
                         </Typography>
                         <Typography variant="body2" color="text.secondary" gutterBottom>
-                            Phone: +1 234 567 890
+                            Phone: {profileDetails.phone}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            Location: New York, USA
-                        </Typography>
+
                     </CardContent>
 
-                    <Box mt={3} display="flex" justifyContent="center">
+                    {/* <Box mt={3} display="flex" justifyContent="center">
                         <Button variant="contained" color="primary">
                             Edit Profile
                         </Button>
-                    </Box>
+                    </Box> */}
                 </Card>
             </Grid>
         </Grid>

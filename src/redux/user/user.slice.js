@@ -46,7 +46,6 @@ const userSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload?.response?.data?.message || "Register failed";
             });
-
     },
 });
 

@@ -2,6 +2,7 @@ import axiosInstanse from "../../axios"
 
 const loginUrl = "/user/loginUser"
 const registerUrl = "user/registerUser"
+const profileUrl = "user/profile"
 
 export const loginUserAsync = async (request) => {
     try {
@@ -20,6 +21,15 @@ export const registerUserAsync = async (request) => {
         return response.data
     } catch (error) {
         return response
+    }
+}
+
+export const profileAsync = async () => {
+    try {
+        const response = await axiosInstanse.get(profileUrl)
+        return response.data
+    } catch (error) {
+        return error
     }
 }
 

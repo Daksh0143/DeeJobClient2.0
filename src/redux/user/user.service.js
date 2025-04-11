@@ -20,7 +20,7 @@ export const registerUserAsync = async (request) => {
         console.log("response", response)
         return response.data
     } catch (error) {
-        return response
+        return error.response
     }
 }
 

@@ -24,7 +24,7 @@ const pages = [
     { name: 'Pricing', path: '/pricing' },
     { name: 'Blog', path: '/blog' },
     { name: 'Login', path: '/authentication/login' },
-    { name: 'Jobs', path: '/jobs/create' }
+    { name: 'Jobs', path: '/jobs' }
 ];
 // const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 const settings = [
@@ -59,7 +59,7 @@ function Navbar() {
     };
 
     return (
-        <AppBar position="fixed">
+        <AppBar position='sticky' style={{ overflow: "hidden" }} >
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />

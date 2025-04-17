@@ -30,6 +30,8 @@ export const loginSchema = Yup.object().shape({
 const Login = () => {
     const dispatch = useDispatch()
     const router = useRouter()
+    const expiry = Date.now() + 8 * 60 * 60 * 1000;
+
     const { initialValues, errors, values, handleChange, handleSubmit, handleBlur, handleReset, touched } = useFormik({
         initialValues: {
             email: "",
@@ -42,9 +44,10 @@ const Login = () => {
                 if (result.payload.status === 200) {
                     toast.success(result.payload.message)
                     setItem("token", result.payload.data.token)
+                    setItem("token-expiry", expiry)
                     router.push("/")
                 }
-            }).catch((err) =>    {
+            }).catch((err) => {
                 console.log(":EROR", err)
             });
         }

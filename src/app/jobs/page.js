@@ -1,19 +1,18 @@
 "use client"
 import React from 'react'
-import JobAgGrid from '@/Common/JobAgGrid'
 import { Grid, Typography } from '@mui/material'
+import JobTable from '@/Common/JobTable';
 
 const columnDefs = [
-  { headerName: "ID", field: "id", sortable: true, filter: true },
-  { headerName: "Name", field: "name", sortable: true, filter: true },
-  { headerName: "Email", field: "email", sortable: true, filter: true },
-  { headerName: "Role", field: "role", sortable: true, filter: true },
+  { id: 'name', label: 'Name' },
+  { id: 'email', label: 'Email', minWidth: 170 },
+  { id: 'role', label: 'Role' }
 ];
 
 const rowData = [
-  { id: 1, name: "Alice Johnson", email: "alice@example.com", role: "Admin" },
-  { id: 2, name: "Bob Smith", email: "bob@example.com", role: "User" },
-  { id: 3, name: "Charlie Brown", email: "charlie@example.com", role: "Manager" },
+  { name: 'Alice', email: 'alice@example.com', role: 'Admin' },
+  { name: 'Bob', email: 'bob@example.com', role: 'User' },
+  { name: 'Charlie', email: 'charlie@example.com', role: 'Editor' }
 ];
 
 const page = () => {
@@ -23,10 +22,7 @@ const page = () => {
         <Typography variant='h6' my={1} mx={4}>Jobs</Typography>
       </Grid>
       <Grid size={{ xs: 12 }}>
-        <JobAgGrid
-          rowData={rowData}
-          columnDefs={columnDefs}
-        />
+        <JobTable rows={rowData} columns={columnDefs} title={"Job Table"} />
       </Grid>
     </Grid>
   )

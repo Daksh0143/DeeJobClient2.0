@@ -2,6 +2,7 @@
 import React from 'react'
 import { Grid, Typography } from '@mui/material'
 import JobTable from '@/Common/JobTable';
+// import JobTable from '@/Common/JobTable';
 
 const columnDefs = [
   { id: 'name', label: 'Name' },

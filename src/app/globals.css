@@ -1,42 +1,36 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* Custom styles for the header */
+/* .ag-theme-alpine .ag-header {
+  background-color: #4CAF50 !important;
+  color: white !important;
+  font-weight: bold !important;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+.ag-theme-alpine .ag-header-cell {
+  border-bottom: 2px solid #388E3C !important;
+
 }
+
+/* Custom styles for data cells */
+/* .ag-theme-alpine .ag-cell {
+  background-color: #f9f9f9 !important;
+  color: #333 !important;
+} */
+
+/* .ag-theme-alpine .ag-row:hover .ag-cell {
+  background-color: #e0f7fa !important;
+}
+
+.ag-theme-alpine .ag-row-selected {
+  background-color: #c8e6c9 !important;
+}
+
+.ag-theme-alpine {
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}  */

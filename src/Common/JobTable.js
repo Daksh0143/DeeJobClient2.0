@@ -1,47 +1,39 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import React from 'react'
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
 
-const JobTable = ({ columns, rows, title }) => {
+ModuleRegistry.registerModules([AllCommunityModule]);
+
+const rowData = [
+    { make: "Tesla", model: "Model Y", price: 64950, electric: true },
+    { make: "Ford", model: "F-Series", price: 33850, electric: false },
+    { make: "Toyota", model: "Corolla", price: 29600, electric: false },
+];
+
+// Column Definitions: Defines the columns to be displayed.
+const colDefs = [
+    { field: "make" },
+    { field: "model" },
+    { field: "price" },
+    { field: "electric" }
+];
+
+
+const JobTable = ({ height, rowHeight }) => {
     return (
-        <Paper sx={{ width: '100%', overflow: 'hidden', p: 2 }}>
-            {title && <Typography variant="h6" gutterBottom>{title}</Typography>}
-            <TableContainer sx={{ maxHeight: 440 }}>
-                <Table stickyHeader size="small" aria-label="dense table" >
-                    <TableHead >
-                        <TableRow >
-                            {columns.map((column) => (
-                                <TableCell
-                                    key={column.id}
-                                    align={column.align || 'left'}
-                                    style={{ minWidth: column.minWidth || 100 }}
-                                >
-                                    {column.label}
-                                </TableCell>
-                            ))}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {rows.length === 0 ? (
-                            <TableRow>
-                                <TableCell colSpan={columns.length} align="center">
-                                    No data available.
-                                </TableCell>
-                            </TableRow>
-                        ) : (
-                            rows.map((row, index) => (
-                                <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                                    {columns.map((column) => (
-                                        <TableCell key={column.id} align={column.align || 'left'}>
-                                            {row[column.id]}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            ))
-                        )}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </Paper>
+        <div style={{ height: 350 | height }} className="ag-theme-alpine">
+            <AgGridReact
+                rowData={rowData}
+                columnDefs={colDefs}
+                pagination={true}
+                theme={"legacy"}
+                rowHeight={rowHeight || 25}
+
+            />
+        </div>
+
     )
 }
 

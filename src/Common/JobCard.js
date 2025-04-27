@@ -16,6 +16,7 @@ const JobCard = ({
     fixedSalary,
 
 
+
 }) => {
 
     const renderSalary = () => {
@@ -30,9 +31,9 @@ const JobCard = ({
 
     return (
 
-        <Card sx={{ maxWidth: 345, ml: 1, boxShadow: 3, borderRadius: 2 }}>
+        <Card sx={{ maxWidth: 345, ml: 1, boxShadow: 3, borderRadius: 2, }}>
             <CardHeader
-                sx={{ bgcolor: "#1976D2" }}
+                sx={{ bgcolor: "#1976D2", minHeight: "120px" }}
                 title={title || "Hiring juniour Developer"}  // TITLE
                 subheader={createDate || "September 14, 2016"}  // createdBy
                 slotProps={{

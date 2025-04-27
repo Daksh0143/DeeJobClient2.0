@@ -7,38 +7,16 @@ import { getAllJobAction } from '@/redux/jobs/jobs.middleware';
 import { jobSelector } from '@/redux/jobs/jobs.slice';
 import { toast } from 'react-toastify';
 import JobCard from '@/Common/JobCard';
-
-// import JobTable from '@/Common/JobTable';
-
-
-// Column Definitions: Defines the columns to be displayed.
-const columnDefs = [
-  { field: "title", headerName: "Title", flex: 1 },
-  { field: "category", headerName: "Category", flex: 1 },
-  { field: "city", headerName: "City", flex: 1 },
-  { field: "country", headerName: "Country", flex: 1 },
-  { field: "location", headerName: "Location", flex: 1 },
-  { field: "salaryFrom", headerName: "Salary From", flex: 1 },
-  { field: "salaryTo", headerName: "Salary To", flex: 1 },
-  { field: "fixedSalary", headerName: "Fixed Salary", flex: 1 },
-  { field: "description", headerName: "Description", flex: 1 },
-];
+import { formatDateTime } from '@/Utills/date';
 
 
 const page = () => {
   const { Jobs } = useSelector(jobSelector)
 
-  console.log("JOBS", Jobs?.jobs)
-
-
-
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(getAllJobAction({
-      minSalary: 10000,
-      maxSalary: 20000
-    })).then((result) => {
+    dispatch(getAllJobAction()).then((result) => {
       console.log("result", result)
       toast.success(result.payload.message)
     }).catch((err) => {
@@ -48,14 +26,29 @@ const page = () => {
 
   return (
     <Grid container>
-      <Grid size={{ xs: 12 }}>
-        <Typography variant='h6' my={1} mx={4}>Jobs</Typography>
+      <Grid size={{ xs: 12 }} bgcolor={"red"}>
+        <Typography variant='h6' my={1} mx={4}>Filters</Typography>
       </Grid>
-      <Grid size={{ xs: 12 }}>
-        {/* <JobTable rowData={Jobs?.jobs} columnDefs={columnDefs} /> */}
-        <JobCard />
-      </Grid>
-    </Grid>
+      {Jobs?.jobs?.length > 0 && Jobs.jobs.map((item) => (
+
+        <Grid size={{ xs: 12, sm: 6, md: 3, lg: 4 }} key={item._id} display={"flex"} mb={1}>
+          <JobCard
+            title={item.title}
+            createDate={formatDateTime(item.createdAt)}
+            description={item.description}
+            category={item.category}
+            location={item.location}
+            city={item.city}
+            salaryFrom={item.salaryFrom}
+            salaryTo={item.salaryTo}
+            fixedSalary={item.fixedSalary}
+          />
+
+        </Grid>
+      ))}
+
+
+    </Grid >
   )
 }
 

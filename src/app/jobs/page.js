@@ -5,26 +5,30 @@ import JobTable from '@/Common/JobTable';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllJobAction } from '@/redux/jobs/jobs.middleware';
 import { jobSelector } from '@/redux/jobs/jobs.slice';
+import { toast } from 'react-toastify';
+import JobCard from '@/Common/JobCard';
 
 // import JobTable from '@/Common/JobTable';
 
-const rowData = [
-  { make: "Tesla", model: "Model Y", price: 64950, electric: true },
-  { make: "Ford", model: "F-Series", price: 33850, electric: false },
-  { make: "Toyota", model: "Corolla", price: 29600, electric: false },
-];
 
 // Column Definitions: Defines the columns to be displayed.
 const columnDefs = [
-  { field: "make", flex: 1 },
-  { field: "model", flex: 1 },
-  { field: "price", flex: 1 },
-  { field: "electric", flex: 1 }
+  { field: "title", headerName: "Title", flex: 1 },
+  { field: "category", headerName: "Category", flex: 1 },
+  { field: "city", headerName: "City", flex: 1 },
+  { field: "country", headerName: "Country", flex: 1 },
+  { field: "location", headerName: "Location", flex: 1 },
+  { field: "salaryFrom", headerName: "Salary From", flex: 1 },
+  { field: "salaryTo", headerName: "Salary To", flex: 1 },
+  { field: "fixedSalary", headerName: "Fixed Salary", flex: 1 },
+  { field: "description", headerName: "Description", flex: 1 },
 ];
 
 
 const page = () => {
   const { Jobs } = useSelector(jobSelector)
+
+  console.log("JOBS", Jobs?.jobs)
 
 
 
@@ -32,9 +36,14 @@ const page = () => {
 
   useEffect(() => {
     dispatch(getAllJobAction({
-      minSalary: 5000,
-      maxSalary: 10000
-    }))
+      minSalary: 10000,
+      maxSalary: 20000
+    })).then((result) => {
+      console.log("result", result)
+      toast.success(result.payload.message)
+    }).catch((err) => {
+      toast.err(err.message)
+    });
   }, [])
 
   return (
@@ -43,7 +52,8 @@ const page = () => {
         <Typography variant='h6' my={1} mx={4}>Jobs</Typography>
       </Grid>
       <Grid size={{ xs: 12 }}>
-        <JobTable rowData={rowData} columnDefs={columnDefs} />
+        {/* <JobTable rowData={Jobs?.jobs} columnDefs={columnDefs} /> */}
+        <JobCard />
       </Grid>
     </Grid>
   )

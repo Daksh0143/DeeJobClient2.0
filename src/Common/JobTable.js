@@ -6,27 +6,14 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-const rowData = [
-    { make: "Tesla", model: "Model Y", price: 64950, electric: true },
-    { make: "Ford", model: "F-Series", price: 33850, electric: false },
-    { make: "Toyota", model: "Corolla", price: 29600, electric: false },
-];
-
-// Column Definitions: Defines the columns to be displayed.
-const colDefs = [
-    { field: "make" },
-    { field: "model" },
-    { field: "price" },
-    { field: "electric" }
-];
 
 
-const JobTable = ({ height, rowHeight }) => {
+const JobTable = ({ rowData, columnDefs, height, rowHeight }) => {
     return (
         <div style={{ height: 350 | height }} className="ag-theme-alpine">
             <AgGridReact
                 rowData={rowData}
-                columnDefs={colDefs}
+                columnDefs={columnDefs}
                 pagination={true}
                 theme={"legacy"}
                 rowHeight={rowHeight || 25}

@@ -1,29 +1,49 @@
 "use client"
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Grid, Typography } from '@mui/material'
 import JobTable from '@/Common/JobTable';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllJobAction } from '@/redux/jobs/jobs.middleware';
+import { jobSelector } from '@/redux/jobs/jobs.slice';
+
 // import JobTable from '@/Common/JobTable';
 
-const columnDefs = [
-  { id: 'name', label: 'Name' },
-  { id: 'email', label: 'Email', minWidth: 170 },
-  { id: 'role', label: 'Role' }
+const rowData = [
+  { make: "Tesla", model: "Model Y", price: 64950, electric: true },
+  { make: "Ford", model: "F-Series", price: 33850, electric: false },
+  { make: "Toyota", model: "Corolla", price: 29600, electric: false },
 ];
 
-const rowData = [
-  { name: 'Alice', email: 'alice@example.com', role: 'Admin' },
-  { name: 'Bob', email: 'bob@example.com', role: 'User' },
-  { name: 'Charlie', email: 'charlie@example.com', role: 'Editor' }
+// Column Definitions: Defines the columns to be displayed.
+const columnDefs = [
+  { field: "make", flex: 1 },
+  { field: "model", flex: 1 },
+  { field: "price", flex: 1 },
+  { field: "electric", flex: 1 }
 ];
+
 
 const page = () => {
+  const { Jobs } = useSelector(jobSelector)
+
+
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getAllJobAction({
+      minSalary: 5000,
+      maxSalary: 10000
+    }))
+  }, [])
+
   return (
     <Grid container>
-      <Grid size={{ xs: 12 }} bgcolor={"green"}>
+      <Grid size={{ xs: 12 }}>
         <Typography variant='h6' my={1} mx={4}>Jobs</Typography>
       </Grid>
       <Grid size={{ xs: 12 }}>
-        <JobTable rows={rowData} columns={columnDefs} title={"Job Table"} />
+        <JobTable rowData={rowData} columnDefs={columnDefs} />
       </Grid>
     </Grid>
   )

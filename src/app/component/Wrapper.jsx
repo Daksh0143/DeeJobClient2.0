@@ -19,7 +19,7 @@ const Wrapper = ({ children }) => {
 
   return (
     <>
-      <Grid container height={"100vh"} width="100vw" >
+      <Grid container >
         <Navbar />
         <Grid size={{ xs: 12 }} sx={{ height: "100%" }}>
           {children}

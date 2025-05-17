@@ -1,8 +1,8 @@
 const { createSlice } = require("@reduxjs/toolkit");
-const { getAllJobAction } = require("./jobs.middleware");
+const { getAllJobAction, createJobAction } = require("./jobs.middleware");
 
 const initialState = {
-    Jobs: null,
+    Jobs: [],
     isLoading: false,
     isError: null,
 };
@@ -24,7 +24,21 @@ const jobsSlice = createSlice({
             .addCase(getAllJobAction.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = action.payload?.response?.data?.message;
-            });
+            })
+            .addCase(createJobAction.pending, (state) => {
+                state.isLoading = true;
+                state.isError = null;
+            })
+            .addCase(createJobAction.fulfilled, (state, action) => {
+                state.isLoading = false;
+                // Add the newly created job to the existing Jobs list
+                state.Jobs.push(action.payload);
+            })
+            .addCase(createJobAction.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = action.payload?.response?.data?.message;
+            })
+
 
     }
 })

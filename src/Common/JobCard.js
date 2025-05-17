@@ -1,8 +1,11 @@
+"use client "
 import React from 'react'
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
+import { Button } from '@mui/material';
+import { useRouter } from 'next/navigation';
 
 const JobCard = ({
     title,
@@ -19,6 +22,7 @@ const JobCard = ({
 
 }) => {
 
+    const router = useRouter()
     const renderSalary = () => {
         if (fixedSalary) {
             return `₹ ${fixedSalary}`;
@@ -31,7 +35,7 @@ const JobCard = ({
 
     return (
 
-        <Card sx={{ maxWidth: 345, ml: 1, boxShadow: 3, borderRadius: 2, }}>
+        <Card Card sx={{ maxWidth: 345, minWidth: 220, ml: 1, boxShadow: 3, borderRadius: 2, }}>
             <CardHeader
                 sx={{ bgcolor: "#1976D2", minHeight: "120px" }}
                 title={title || "Hiring juniour Developer"}  // TITLE
@@ -52,23 +56,17 @@ const JobCard = ({
 
 
             <CardContent>
-                <Typography >
-                    {/* Description */}
-                    <span style={{ fontWeight: 600 }}>Description : </span>
-                    {description || "Our Company is hiring 0.6-1 year experience developer"}
-                </Typography>
                 <Typography><span style={{ fontWeight: 600 }}>Category :</span> {category || "Jr.Softare Engineer"}</Typography>
 
                 <Typography> <span style={{ fontWeight: 600 }}>Location : </span> {city || "Ahmedabad"} {location || "Navrangpura"}</Typography>
 
-                <Typography>
-                    <span style={{ fontWeight: 600 }}>Salary: </span>
-                    {renderSalary()}
-                </Typography>
-
+                <Button variant='contained' sx={{ width: "100%", mt: 1 }} onClick={() => router.push("/jobs/details")}>
+                    See Details
+                </Button>
 
             </CardContent>
         </Card >
+
     )
 }
 

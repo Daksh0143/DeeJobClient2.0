@@ -13,21 +13,22 @@ import { useRouter } from 'next/navigation';
 
 
 const page = () => {
-  const { Jobs } = useSelector(jobSelector)
+  const { filters } = useSelector(jobSelector)
   const router = useRouter()
   const dispatch = useDispatch()
   const [jobsData, setJobsData] = useState()
 
+  console.log("filters", filters)
 
   useEffect(() => {
-    dispatch(getAllJobAction()).then((result) => {
+    dispatch(getAllJobAction(filters)).then((result) => {
       console.log("result", result)
       setJobsData(result.payload.data)
       toast.success(result.payload.message)
     }).catch((err) => {
       toast.err(err.message)
     });
-  }, [])
+  }, [filters])
 
   console.log("JOBSDAATA", jobsData)
 
@@ -49,10 +50,7 @@ const page = () => {
         </Button>
       </Grid>
 
-      {/* Job Cards */}
-      {/* <Grid size={{ xs: 12 }} display={"flex"} bgcolor={"green"}> */}
-        <JobCard data={jobsData} />
-      {/* </Grid> */}
+      <JobCard data={jobsData} />
 
     </Grid>
   )

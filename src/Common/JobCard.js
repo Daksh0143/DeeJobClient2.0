@@ -1,13 +1,15 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { Button, CardActions, Grid, Slider } from '@mui/material';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import JobTextField from './JobTextField';
 import JobDropDown from './JobDropDown';
+import { setJobFilters } from '@/redux/jobs/jobs.slice';
+import { useDispatch } from 'react-redux';
 
 const Cities = [
     { label: "Ahmedabad", value: "Ahmedabad" },
@@ -38,10 +40,13 @@ const Categories = [
 
 const JobCard = ({ data }) => {
     const router = useRouter();
-    console.log("data", data)
+    const pathName = usePathname();
+    const dispatch = useDispatch()
     const [salaryRange, setSalaryRange] = useState([0, 50000]);
     const [selectedCity, setSelectedCity] = useState("");
     const [selectedCategories, setSelectedCategories] = useState("")
+    const [searchValue, setSelectedSearchValue] = useState("")
+
     const handleChange = (event, newValue) => {
         setSalaryRange(newValue);
     };
@@ -52,12 +57,18 @@ const JobCard = ({ data }) => {
         newRange[index] = value;
         setSalaryRange(newRange);
     };
+
+    useEffect(() => {
+        dispatch(setJobFilters({
+            search: searchValue
+        }));
+    }, [selectedCity, selectedCategories, salaryRange, searchValue]);
     return (
         <Grid container width={"100%"}>
             <Grid size={{ xs: 12, sm: 3 }} p={1} sx={{ position: "sticky" }} >
                 <Grid container>
                     <Grid size={{ xs: 12 }}>
-                        <JobTextField label={"Search"} size='small' />
+                        <JobTextField label={"Search"} size='small' value={searchValue} onChange={(e) => setSelectedSearchValue(e.target.value)} />
                         <Slider
                             sx={{ p: 0 }}
                             value={salaryRange}
@@ -123,8 +134,13 @@ const JobCard = ({ data }) => {
                                         <Button
                                             fullWidth
                                             variant="contained"
-                                            onClick={() => router.push(`/jobs/details/${item._id}`)}
-                                        >
+                                            onClick={() =>
+                                                router.push(
+                                                    pathName === "/ownJobs"
+                                                        ? `/jobs/details/${item._id}?action=ownJobs`
+                                                        : `/jobs/details/${item._id}`
+                                                )
+                                            }>
                                             View More
                                         </Button>
                                     </CardActions>

@@ -6,12 +6,23 @@ const initialState = {
     OwnJobs: [],
     isLoading: false,
     isError: null,
+    filters: {
+        search: '',
+        city: '',
+        category: '',
+        salaryRange: [0, 100000]
+    },
 };
 
 const jobsSlice = createSlice({
     name: "Jobs",
     initialState: initialState,
-    reducers: {},
+    reducers: {
+        setJobFilters: (state, action) => {
+            state.filters = { ...state.filters, ...action.payload };
+        },
+    },
+
     extraReducers: (builder) => {
         builder
             .addCase(getAllJobAction.pending, (state) => {
@@ -45,4 +56,4 @@ const jobsSlice = createSlice({
 
 export default jobsSlice.reducer;
 export const jobSelector = (state) => state.Jobs;
-
+export const {setJobFilters} =jobsSlice.actions

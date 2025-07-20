@@ -16,41 +16,45 @@ const page = () => {
   const { Jobs } = useSelector(jobSelector)
   const router = useRouter()
   const dispatch = useDispatch()
+  const [jobsData, setJobsData] = useState()
+
 
   useEffect(() => {
     dispatch(getAllJobAction()).then((result) => {
       console.log("result", result)
+      setJobsData(result.payload.data)
       toast.success(result.payload.message)
     }).catch((err) => {
       toast.err(err.message)
     });
   }, [])
 
+  console.log("JOBSDAATA", jobsData)
+
 
   return (
-    <Grid container>
-      <Grid size={{ xs: 12 }} display={"flex"} alignItems={"flex-end"} justifyContent={"flex-end"} mr={4} mt={2} mb={2}>
-        <Button variant='contained' onClick={()=>router.push("/jobs/create")}>Create</Button>
+    <Grid container spacing={2}>
+      {/* Create Button */}
+      <Grid
+        size={{ xs: 12 }}
+        display="flex"
+        justifyContent="flex-end"
+        pr={4}
+        mt={2}
+        mb={2}
+        bgcolor={"yellow"}
+      >
+        <Button variant="contained" onClick={() => router.push("/jobs/create")}>
+          Create
+        </Button>
       </Grid>
-      {Jobs?.jobs?.length > 0 && Jobs.jobs.map((item) => (
-        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={item._id} display={"flex"} mb={1}>
-          <JobCard
-            title={item.title}
-            createDate={formatDateTime(item.createdAt)}
-            description={item.description}
-            category={item.category}
-            location={item.location}
-            city={item.city}
-            salaryFrom={item.salaryFrom}
-            salaryTo={item.salaryTo}
-            fixedSalary={item.fixedSalary}
-          />
 
-        </Grid>
-      ))}
+      {/* Job Cards */}
+      {/* <Grid size={{ xs: 12 }} display={"flex"} bgcolor={"green"}> */}
+        <JobCard data={jobsData} />
+      {/* </Grid> */}
 
-
-    </Grid >
+    </Grid>
   )
 }
 

@@ -24,10 +24,11 @@ const pages = [
     { name: 'Pricing', path: '/pricing' },
     { name: 'Blog', path: '/blog' },
     { name: 'Login', path: '/authentication/login' },
-    { name: 'Jobs', path: '/jobs' }
+    { name: 'Jobs', path: '/jobs' },
+    { name: 'My Jobs', path: '/ownJobs' }
 ];
 // const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-const settings = [
+const settings = [  
     {
         name: "Profile", path: "/profile",
     },

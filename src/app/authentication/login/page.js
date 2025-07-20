@@ -41,11 +41,14 @@ const Login = () => {
         validationSchema: loginSchema,
         onSubmit: (value) => {
             dispatch(loginUserAction(value)).then((result) => {
+                console.log("result", result)
                 if (result.payload.status === 200) {
                     toast.success(result.payload.message)
                     setItem("token", result.payload.data.token)
                     setItem("token-expiry", expiry)
                     router.push("/")
+                } else {
+                    toast.error(result.payload.data.message)
                 }
             }).catch((err) => {
                 console.log(":EROR", err)

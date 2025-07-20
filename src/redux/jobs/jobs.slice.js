@@ -1,8 +1,9 @@
 const { createSlice } = require("@reduxjs/toolkit");
-const { getAllJobAction, createJobAction } = require("./jobs.middleware");
+const { getAllJobAction, createJobAction, findOwnJobsAction } = require("./jobs.middleware");
 
 const initialState = {
     Jobs: [],
+    OwnJobs: [],
     isLoading: false,
     isError: null,
 };
@@ -38,7 +39,6 @@ const jobsSlice = createSlice({
                 state.isLoading = false;
                 state.isError = action.payload?.response?.data?.message;
             })
-
 
     }
 })

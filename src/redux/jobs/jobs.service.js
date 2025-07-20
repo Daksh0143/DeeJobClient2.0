@@ -5,7 +5,7 @@ import axiosInstanse from "../../axios"
 const getAllJobUrl = "job/getAll"
 const createJobUrl = "job/create"
 const findOneJobUrl = "job/findOne"
-const ownJobsUrl = "job/ownJobs"
+const ownJobsUrl = "job/myJobs"
 
 export const getAllJobAsync = async (params) => {
     try {
@@ -35,11 +35,12 @@ export const findOneJobAsync = async (id) => {
     }
 }
 
-export const ownJobsAsync = async () => {
+export const ownJobsAsync = async (params) => {
     try {
-        const response = await axiosInstanse.get(ownJobsUrl)
+        const response = await axiosInstanse.get(ownJobsUrl,{params})
         return response
     } catch (error) {
         return error
     }
 }
+

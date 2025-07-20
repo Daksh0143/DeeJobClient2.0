@@ -13,6 +13,7 @@ export const getAllJobAction = createAsyncThunk("/job/getAll", async (params, { 
     }
 })
 
+
 export const createJobAction = createAsyncThunk("/job/create", async (request, { rejectWithValue }) => {
     try {
         const response = await createJobAsync(request)
@@ -32,9 +33,9 @@ export const findOneJobAction = createAsyncThunk("/job/findOne", async (id, { re
     }
 })
 
-export const findOwnJobsAction = createAsyncThunk("/job/ownJobs", async (_, { rejectWithValue }) => {
+export const findOwnJobsAction = createAsyncThunk("/job/myJobs", async (params, { rejectWithValue }) => {
     try {
-        const response = await ownJobsAsync()
+        const response = await ownJobsAsync(params)
         return response
     } catch (error) {
         return rejectWithValue(error)

@@ -1,4 +1,4 @@
-import { TextField } from '@mui/material'
+import { Box, TextField, Typography } from '@mui/material'
 import React from 'react'
 
 const JobTextField = ({ label, value, name, onChange, type = "text",
@@ -11,6 +11,7 @@ const JobTextField = ({ label, value, name, onChange, type = "text",
     onBlur,
     sx = {},
 }) => {
+
     return (
         <TextField label={label}
             name={name}
@@ -22,10 +23,13 @@ const JobTextField = ({ label, value, name, onChange, type = "text",
             required={required}
             fullWidth={fullWidth}
             variant={variant}
-            size={size}
+            size={size || "small"}
             error={error}
             helperText={helperText}
-            sx={{ my: 1.5, ...sx }} />
+            sx={{ my: 1, ...sx }}
+
+        />
+
 
     )
 }

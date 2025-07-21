@@ -18,17 +18,20 @@ const page = () => {
   const dispatch = useDispatch()
   const [jobsData, setJobsData] = useState()
 
-  console.log("filters", filters)
-
   useEffect(() => {
-    dispatch(getAllJobAction(filters)).then((result) => {
-      console.log("result", result)
-      setJobsData(result.payload.data)
-      toast.success(result.payload.message)
-    }).catch((err) => {
-      toast.err(err.message)
-    });
-  }, [filters])
+    const handler = setTimeout(() => {
+      dispatch(getAllJobAction(filters))
+        .then((result) => {
+          console.log("result", result);
+          setJobsData(result.payload.data);
+          toast.success(result.payload.message);
+        })
+        .catch((err) => {
+          toast.error(err.message || "Something went wrong");
+        });
+    }, 1000);
+    return () => clearTimeout(handler);
+  }, [filters]);
 
   console.log("JOBSDAATA", jobsData)
 

@@ -9,6 +9,7 @@ const JobDetails = () => {
     const params = useParams()
     const searchParams = useSearchParams()
     const action = searchParams.get('action')
+
     const dispatch = useDispatch()
     const [jobData, setJobData] = useState()
     useEffect(() => {

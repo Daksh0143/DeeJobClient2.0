@@ -20,15 +20,13 @@ import { clearStorage } from '@/Utills/localStorage';
 
 
 const pages = [
-    { name: 'Products', path: '/products' },
-    { name: 'Pricing', path: '/pricing' },
-    { name: 'Blog', path: '/blog' },
     { name: 'Login', path: '/authentication/login' },
     { name: 'Jobs', path: '/jobs' },
-    { name: 'My Jobs', path: '/ownJobs' }
+    { name: 'My Jobs', path: '/ownJobs' },
+    { name: "Company", path: "/company" }
 ];
 // const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-const settings = [  
+const settings = [
     {
         name: "Profile", path: "/profile",
     },

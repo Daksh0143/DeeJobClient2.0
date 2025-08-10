@@ -7,7 +7,7 @@ export const getAllCompanyAsync = async () => {
     try {
         const company = await axiosInstanse(getCompanyUrl)
         console.log("company", company)
-        return company
+        return company.data
     } catch (error) {
         return error
     }

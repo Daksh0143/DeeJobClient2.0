@@ -5,11 +5,12 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import CompanyCard from '../component/CompanyCard'
+import { useRouter } from 'next/navigation'
 
 const Company = () => {
     const dispatch = useDispatch();
     const [companyDetails, setCompanyDetails] = useState([])
-    // const 
+    const router = useRouter()
 
     const fetchCompany = async () => {
         try {
@@ -36,16 +37,19 @@ const Company = () => {
         <Grid container p={3}>
             <Grid size={{ xs: 12 }} display={"flex"} justifyContent={"space-between"}>
                 <Typography variant='h5'>Company Details</Typography>
-                <Button variant='contained'>Create</Button>
+                <Button variant='contained' onClick={() => { router.push("company/create") }}>Create</Button>
             </Grid>
-            <Grid size={{ xs: 12 }}>
+            <Grid size={{ xs: 12 }} >
                 {companyDetails.data && companyDetails.data.length > 0 ? (
-                    companyDetails.data.map((item, index) => (
-                        <CompanyCard data={item} />
-                    ))
+                    <Grid container>
+                        <Grid size={{ xs: 12 }} mt={1}>
+                            <CompanyCard data={companyDetails.data} />
+                        </Grid>
+                    </Grid>
+
                 ) : (
                     <Grid container>
-                        <Grid item xs={12}>
+                        <Grid size={{ xs: 12 }}>
                             <Typography variant="h6">No Data Found</Typography>
                         </Grid>
                     </Grid>

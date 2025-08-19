@@ -13,7 +13,7 @@ export const getAllCompanyAction = createAsyncThunk("/company/get", (async (_, {
 
 export const createCompanyAction = createAsyncThunk("/company/post", (async (req, { rejectWithValue }) => {
     try {
-        const response = await createCompanyAsync()
+        const response = await createCompanyAsync(req)
         return response
     } catch (error) {
         return rejectWithValue(error)

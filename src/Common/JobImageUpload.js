@@ -6,61 +6,38 @@ import {
     CardMedia,
     IconButton
 } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ImageUploading from "react-images-uploading"
 import { AddPhotoAlternate, Delete } from '@mui/icons-material'
 
-// JobImageUpload Component for Company Logo
-const JobImageUpload = ({ onImageUpload, error, helperText }) => {
+const JobImageUpload = ({ value, onImageUpload, error, helperText }) => {
     const [images, setImages] = useState([])
-    const [isConverting, setIsConverting] = useState(false)
-    const maxNumber = 1 // Only one logo allowed
+    const maxNumber = 1
 
-    const onChange = async (imageList) => {
+    // 🔹 Sync local images[] whenever parent `value` (Formik) changes
+    useEffect(() => {
+        if (value) {
+            const objectUrl = URL.createObjectURL(value)
+            setImages([{ data_url: objectUrl, file: value }])
+        } else {
+            setImages([])
+        }
+    }, [value])
+
+    const handleChange = (imageList) => {
         setImages(imageList)
-        setIsConverting(true)
-
-        try {
-            if (imageList.length > 0) {
-                // Convert file to binary format
-                const binaryData = await convertToBinary(imageList[0].file)
-                onImageUpload(binaryData)
-            } else {
-                onImageUpload(null)
-            }
-        } catch (error) {
-            console.error('Error converting image to binary:', error)
+        if (imageList.length > 0) {
+            onImageUpload(imageList[0].file) // send File to Formik
+        } else {
             onImageUpload(null)
-        } finally {
-            setIsConverting(false)
         }
     }
-
-
-    const convertToBinary = async (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader()
-            reader.onload = () => {
-                const arrayBuffer = reader.result
-                const uint8Array = new Uint8Array(arrayBuffer)
-                resolve({
-                    binary: uint8Array,
-                    fileName: file.name,
-                    fileType: file.type,
-                    fileSize: file.size
-                })
-            }
-            reader.onerror = () => reject(reader.error)
-            reader.readAsArrayBuffer(file)
-        })
-    }
-
 
     return (
         <ImageUploading
             multiple={false}
             value={images}
-            onChange={onChange}
+            onChange={handleChange}
             maxNumber={maxNumber}
             dataURLKey="data_url"
             acceptType={['jpg', 'gif', 'png', 'jpeg']}
@@ -118,7 +95,7 @@ const JobImageUpload = ({ onImageUpload, error, helperText }) => {
                                 <CardMedia
                                     component="img"
                                     height="120"
-                                    image={imageList[0]["data_url"]}
+                                    image={imageList[0].data_url}
                                     alt="Company Logo Preview"
                                     sx={{ objectFit: 'contain', backgroundColor: 'grey.50' }}
                                 />
@@ -135,7 +112,7 @@ const JobImageUpload = ({ onImageUpload, error, helperText }) => {
                                         backgroundColor: "rgba(0,0,0,0.9)"
                                     },
                                 }}
-                                onClick={() => onImageRemove(0)}
+                                onClick={() => handleChange([])} // clear both preview + Formik
                             >
                                 <Delete fontSize="small" />
                             </IconButton>
@@ -157,4 +134,4 @@ const JobImageUpload = ({ onImageUpload, error, helperText }) => {
     )
 }
 
-export default JobImageUpload;
+export default JobImageUpload

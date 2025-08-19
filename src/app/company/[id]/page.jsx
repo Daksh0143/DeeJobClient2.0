@@ -1,6 +1,5 @@
 "use client"
 import JobHeader from '@/Common/JobHeader'
-import JobImageUpload from '@/Common/JobImageUpload'
 import JobTextField from '@/Common/JobTextField'
 import {
     Grid,
@@ -10,7 +9,9 @@ import {
     Card,
     CardContent,
     Divider,
-    Alert
+    Alert,
+    CardMedia,
+    IconButton
 } from '@mui/material'
 import {
     DatePicker,
@@ -21,9 +22,11 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import dayjs from 'dayjs'
 import { useState } from 'react'
-import { Save, Business, Email, LocationOn, People, Language, CalendarToday, Image } from '@mui/icons-material'
+import { Save, Business, Email, LocationOn, People, Language, CalendarToday, Image, AddPhotoAlternate, Delete } from '@mui/icons-material'
 import { useDispatch } from 'react-redux'
 import { createCompanyAction } from '@/redux/company/company.middleware'
+import JobImageUpload from '@/Common/JobImageUpload'
+import { useRouter } from 'next/navigation'
 
 // Validation schema
 const validationSchema = Yup.object({
@@ -52,8 +55,8 @@ const validationSchema = Yup.object({
 const CompanyForm = () => {
     const [submitStatus, setSubmitStatus] = useState(null)
     const currentYear = dayjs()
-
     const dispatch = useDispatch()
+    const router = useRouter()
 
     const formik = useFormik({
         initialValues: {
@@ -71,37 +74,34 @@ const CompanyForm = () => {
                 console.log("values", values)
                 setSubmitStatus('loading')
 
-                // Prepare payload with proper formatting
-                const payload = {
-                    name: values.companyName,
-                    email: values.email,
-                    address: values.address,
-                    candidate: parseInt(values.employeeCount),
-                    websiteUrl: values.websiteUrl,
-                    billingYear: values.establishedYear ? dayjs(values.establishedYear).format('YYYY') : null,
-                    companyLogo: values.logo // This will contain the actual file object
+                // Create FormData for proper binary data handling
+                const formData = new FormData()
+
+                // Add regular form fields
+                formData.append('name', values.companyName)
+                formData.append('email', values.email)
+                formData.append('address', values.address)
+                formData.append('candidate', parseInt(values.employeeCount).toString())
+                formData.append('websiteUrl', values.websiteUrl)
+                formData.append('billingYear', values.establishedYear ? dayjs(values.establishedYear).format('YYYY') : '')
+
+                // Add binary image data as Blob
+                if (values.companyLogo) {
+                    formData.append("companyLogo", values.companyLogo);
                 }
 
-                await new Promise(resolve => setTimeout(resolve, 1000))
-
-                await dispatch(createCompanyAction(payload)).then((result) => {
+                await dispatch(createCompanyAction(formData)).then((result) => {
                     console.log("RESULT===>", result)
+                    setSubmitStatus('success')
+                    router.push("/company")
+                    setTimeout(() => {
+                        formik.resetForm()
+                        setSubmitStatus(null)
+                    }, 3000)
                 }).catch((err) => {
-                    console.log("ERRORR", err)
-                });
-
-                // console.log('Company Form Payload:', payload)
-                // console.log('Image file:', payload.logo)
-                // console.log('Established Year (string):', payload.establishedYear)
-
-                // setSubmitStatus('success')
-
-                // // Reset form after successful submission
-                // setTimeout(() => {
-                //     formik.resetForm()
-                //     setSubmitStatus(null)
-                // }, 3000)
-
+                    console.log("ERROR", err)
+                    setSubmitStatus('error')
+                })
 
             } catch (error) {
                 setSubmitStatus('error')
@@ -110,13 +110,9 @@ const CompanyForm = () => {
         }
     })
 
-    console.log("SUBMIT STATUS", submitStatus)
 
-    const handleImageUpload = (file) => {
-        // Set the actual file object to formik state
-        // This will be available in the payload as values.logo
-        formik.setFieldValue('logo', file)
-    }
+
+
 
     return (
         <Box sx={{ maxWidth: 1200, mx: 'auto', p: 2 }}>
@@ -135,17 +131,7 @@ const CompanyForm = () => {
                         <Divider />
                     </Box>
 
-                    {/* Status Messages */}
-                    {submitStatus === 'success' && (
-                        <Alert severity="success" sx={{ mb: 3 }}>
-                            Company created successfully!
-                        </Alert>
-                    )}
-                    {submitStatus === 'error' && (
-                        <Alert severity="error" sx={{ mb: 3 }}>
-                            Error creating company. Please try again.
-                        </Alert>
-                    )}
+
 
                     <form onSubmit={formik.handleSubmit}>
                         <Grid container spacing={3}>
@@ -325,31 +311,21 @@ const CompanyForm = () => {
                             </Grid>
 
                             <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                                <Box sx={{
-                                    border: 1,
-                                    borderColor: 'divider',
-                                    borderRadius: 1,
-                                    p: 2,
-                                    minHeight: 120,
-                                    display: 'flex',
-                                    flexDirection: 'column'
-                                }}>
-                                    <JobImageUpload
-                                        onImageUpload={handleImageUpload}
-                                        error={Boolean(formik.errors.logo && formik.touched.logo)}
-                                        helperText={formik.errors.logo && formik.touched.logo ? formik.errors.logo : "Upload your company logo"}
-                                    />
-                                    {formik.values.logo && (
-                                        <Typography variant="caption" color="success.main" sx={{ mt: 1 }}>
-                                            ✓ Image selected: {formik.values.logo.name || 'Image file'}
-                                        </Typography>
-                                    )}
-                                </Box>
+                                <JobImageUpload
+                                    value={formik.values.companyLogo}   // File from formik
+                                    onImageUpload={(file) => formik.setFieldValue("companyLogo", file)}
+                                    error={formik.touched.companyLogo && Boolean(formik.errors.companyLogo)}
+                                    helperText={formik.touched.companyLogo && formik.errors.companyLogo}
+                                />
+                                {formik.values.logo && (
+                                    <Typography variant="caption" color="success.main" sx={{ mt: 1, display: 'block' }}>
+                                        ✓ Image selected: {formik.values.logo.fileName || 'Binary data ready'}
+                                    </Typography>
+                                )}
                             </Grid>
 
                             {/* Submit Button */}
                             <Grid size={{ xs: 12 }}>
-                                {JSON.stringify(formik.errors)}
                                 <Box sx={{
                                     display: 'flex',
                                     justifyContent: 'flex-end',

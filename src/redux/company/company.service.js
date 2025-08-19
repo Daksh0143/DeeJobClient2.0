@@ -15,11 +15,15 @@ export const getAllCompanyAsync = async () => {
 
 export const createCompanyAsync = async (req) => {
     try {
-        const response = await axiosInstanse.post(createCompanyUrl, req)
-        return response.data
+        // req should be a FormData object
+        const response = await axiosInstanse.post(createCompanyUrl, req, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        return response.data;
     } catch (error) {
-        console.log("ERROR", error)
+        console.log("ERROR", error);
     }
-}
-
+};
 

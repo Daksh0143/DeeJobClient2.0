@@ -4,7 +4,7 @@ const getCompanyUrl = "company/get"
 const createCompanyUrl = "company/create"
 const getCompanyIdUrl = "company/companyById"
 const editCompanyUrl = "company/edit"
-
+const deleteCompanyUrl = "company/delete"
 
 export const getAllCompanyAsync = async () => {
     try {
@@ -40,8 +40,16 @@ export const getCompanyByIdAsync = async (req) => {
 }
 export const updateCompanyAsync = async ({ id, formData }, res) => {
     try {
-        console.log("KJBJDSLCB",id)
         const response = await axiosInstanse.put(`${editCompanyUrl}/${id}`, formData)
+        return response.data
+    } catch (error) {
+        return error
+    }
+}
+
+export const deleteCompanyAsync = async (id, res) => {
+    try {
+        const response = await axiosInstanse.delete(`${deleteCompanyUrl}/${id}`)
         return response.data
     } catch (error) {
         return error

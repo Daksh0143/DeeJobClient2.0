@@ -37,6 +37,7 @@ const jobsSlice = createSlice({
                 state.isLoading = false;
                 state.isError = action.payload?.response?.data?.message;
             })
+            // CREATE JOB
             .addCase(createJobAction.pending, (state) => {
                 state.isLoading = true;
                 state.isError = null;
@@ -50,6 +51,7 @@ const jobsSlice = createSlice({
                 state.isLoading = false;
                 state.isError = action.payload?.response?.data?.message;
             })
+          
 
     }
 })

@@ -194,17 +194,7 @@ const CompanyForm = () => {
                         <Divider />
                     </Box>
 
-                    {/* Success/Error Messages */}
-                    {submitStatus === 'success' && (
-                        <Alert severity="success" sx={{ mb: 2 }}>
-                            Company {mode === "create" ? "created" : "updated"} successfully!
-                        </Alert>
-                    )}
-                    {submitStatus === 'error' && (
-                        <Alert severity="error" sx={{ mb: 2 }}>
-                            Error {mode === "create" ? "creating" : "updating"} company. Please try again.
-                        </Alert>
-                    )}
+
 
                     <form onSubmit={formik.handleSubmit}>
                         <Grid container spacing={3}>

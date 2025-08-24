@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { createCompanyAsync, getAllCompanyAsync, getCompanyByIdAsync, updateCompanyAsync } from "./company.service";
+import { createCompanyAsync, deleteCompanyAsync, getAllCompanyAsync, getCompanyByIdAsync, updateCompanyAsync } from "./company.service";
 
 export const getAllCompanyAction = createAsyncThunk("/company/get", (async (_, { rejectWithValue }) => {
     try {
@@ -41,4 +41,14 @@ export const updateCompanyAction = createAsyncThunk("/company/edit", (async ({ i
     } catch (error) {
         return rejectWithValue(error)
     }
-})) 
+}))
+
+
+export const deleteCompanyAction = createAsyncThunk("/company/delete", (async (id, { rejectWithValue }) => {
+    try {
+        const response = await deleteCompanyAsync(id)
+        return response
+    } catch (error) {
+        return rejectWithValue(error)
+    }
+}))

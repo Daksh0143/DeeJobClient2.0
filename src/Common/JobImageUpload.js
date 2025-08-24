@@ -17,8 +17,15 @@ const JobImageUpload = ({ value, onImageUpload, error, helperText }) => {
     // 🔹 Sync local images[] whenever parent `value` (Formik) changes
     useEffect(() => {
         if (value) {
-            const objectUrl = URL.createObjectURL(value)
-            setImages([{ data_url: objectUrl, file: value }])
+            if (typeof value === "string") {
+                // existing logo from backend (URL string)
+                setImages([{ data_url: value, file: null }])
+            } else {
+                // newly uploaded File
+                const objectUrl = URL.createObjectURL(value)
+                setImages([{ data_url: objectUrl, file: value }])
+                return () => URL.revokeObjectURL(objectUrl) // cleanup
+            }
         } else {
             setImages([])
         }
@@ -27,7 +34,7 @@ const JobImageUpload = ({ value, onImageUpload, error, helperText }) => {
     const handleChange = (imageList) => {
         setImages(imageList)
         if (imageList.length > 0) {
-            onImageUpload(imageList[0].file) // send File to Formik
+            onImageUpload(imageList[0].file || imageList[0].data_url)
         } else {
             onImageUpload(null)
         }

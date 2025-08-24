@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import CompanyCard from '../component/CompanyCard'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 const Company = () => {
     const dispatch = useDispatch();

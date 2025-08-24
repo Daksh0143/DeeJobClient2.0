@@ -17,16 +17,19 @@ import {
     ListItemIcon,
     ListItemText
 } from "@mui/material";
+import { useRouter } from "next/navigation";
 
-const CompanyCard = ({ data, onEdit, onDelete }) => {
+const CompanyCard = ({ data, onDelete }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedItemId, setSelectedItemId] = useState(null);
     const open = Boolean(anchorEl);
 
+    const router = useRouter()
+
     const handleMenuClick = (event, itemId) => {
         console.log("ITEM ID", itemId)
         setAnchorEl(event.currentTarget);
-        setSelectedItemId(itemId);
+        setSelectedItemId(itemId._id);
     };
 
     const handleMenuClose = () => {
@@ -35,8 +38,8 @@ const CompanyCard = ({ data, onEdit, onDelete }) => {
     };
 
     const handleEdit = () => {
-        if (onEdit && selectedItemId !== null) {
-            onEdit(selectedItemId);
+        if (selectedItemId !== null) {
+            router.push(`/company/edit?id=${selectedItemId}`);
         }
         handleMenuClose();
     };

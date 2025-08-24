@@ -21,12 +21,12 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import dayjs from 'dayjs'
-import { useState } from 'react'
-import { Save, Business, Email, LocationOn, People, Language, CalendarToday, Image, AddPhotoAlternate, Delete } from '@mui/icons-material'
+import { useEffect, useState } from 'react'
+import { Save, Business, Email, LocationOn, People, Language, CalendarToday, Image, AddPhotoAlternate, Delete, Edit } from '@mui/icons-material'
 import { useDispatch } from 'react-redux'
-import { createCompanyAction } from '@/redux/company/company.middleware'
+import { createCompanyAction, getCompanyByIdAction, updateCompanyAction } from '@/redux/company/company.middleware'
 import JobImageUpload from '@/Common/JobImageUpload'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 // Validation schema
 const validationSchema = Yup.object({
@@ -54,9 +54,16 @@ const validationSchema = Yup.object({
 
 const CompanyForm = () => {
     const [submitStatus, setSubmitStatus] = useState(null)
+    const [loading, setLoading] = useState(false)
     const currentYear = dayjs()
     const dispatch = useDispatch()
     const router = useRouter()
+
+    const searchParams = useSearchParams()
+    const id = searchParams.get("id")
+    const pathname = usePathname()
+
+    const mode = pathname.includes("/edit") ? "edit" : "create"
 
     const formik = useFormik({
         initialValues: {
@@ -66,9 +73,10 @@ const CompanyForm = () => {
             employeeCount: '',
             websiteUrl: '',
             establishedYear: null,
-            logo: null
+            companyLogo: null
         },
         validationSchema,
+        enableReinitialize: true, // Important for edit mode
         onSubmit: async (values) => {
             try {
                 console.log("values", values)
@@ -90,12 +98,23 @@ const CompanyForm = () => {
                     formData.append("companyLogo", values.companyLogo);
                 }
 
-                await dispatch(createCompanyAction(formData)).then((result) => {
+                // Add company ID for edit mode
+                if (mode === "edit" && id) {
+                    formData.append('id', id)
+                }
+
+                // Choose appropriate action based on mode
+                const action = mode === "edit" ? updateCompanyAction : createCompanyAction
+                const actionData = mode === "edit" ? { id, formData } : formData
+
+                await dispatch(action(actionData)).then((result) => {
                     console.log("RESULT===>", result)
                     setSubmitStatus('success')
                     router.push("/company")
                     setTimeout(() => {
-                        formik.resetForm()
+                        if (mode === "create") {
+                            formik.resetForm()
+                        }
                         setSubmitStatus(null)
                     }, 3000)
                 }).catch((err) => {
@@ -110,9 +129,50 @@ const CompanyForm = () => {
         }
     })
 
+    const findOneCompany = () => {
+        dispatch(getCompanyByIdAction(id)).then((result) => {
+            console.log("RESULT", result)
+            if (result.payload) {
+                const company = result.payload.data
+                // Populate form with existing data
+                formik.setValues({
+                    companyName: company.name || '',
+                    email: company.email || '',
+                    address: company.address || '',
+                    employeeCount: company.candidate || '',
+                    websiteUrl: company.websiteUrl || '',
+                    establishedYear: company.billingYear ? dayjs().year(company.billingYear) : null,
+                    companyLogo: company?.companyLogo || ''
+                })
+            }
+            setLoading(false)
+        }).catch((err) => {
+            console.log("ERROR", err)
+            setLoading(false)
+        });
+    }
 
+    // Load company data for edit mode
+    useEffect(() => {
+        if (mode === "create") return
+        if (mode === "edit" && id) {
+            setLoading(true)
+            findOneCompany()
+        }
+    }, [])
 
-
+    // Show loading state while fetching data in edit mode
+    if (loading) {
+        return (
+            <Box sx={{ maxWidth: 1200, mx: 'auto', p: 2, textAlign: 'center' }}>
+                <Card elevation={2} sx={{ borderRadius: 2 }}>
+                    <CardContent sx={{ p: 3 }}>
+                        <Typography>Loading company data...</Typography>
+                    </CardContent>
+                </Card>
+            </Box>
+        )
+    }
 
     return (
         <Box sx={{ maxWidth: 1200, mx: 'auto', p: 2 }}>
@@ -120,18 +180,31 @@ const CompanyForm = () => {
                 <CardContent sx={{ p: 3 }}>
                     {/* Header Section */}
                     <Box sx={{ mb: 3 }}>
-                        <JobHeader title="Create Company" />
+                        <JobHeader title={mode === "create" ? "Create Company" : "Edit Company"} />
                         <Typography
                             variant="body2"
                             color="text.secondary"
                             sx={{ mt: 1, mb: 2 }}
                         >
-                            Please fill in the company details below to create a new company profile.
+                            {mode === "create"
+                                ? "Please fill in the company details below to create a new company profile."
+                                : "Update the company details below to modify the company profile."
+                            }
                         </Typography>
                         <Divider />
                     </Box>
 
-
+                    {/* Success/Error Messages */}
+                    {submitStatus === 'success' && (
+                        <Alert severity="success" sx={{ mb: 2 }}>
+                            Company {mode === "create" ? "created" : "updated"} successfully!
+                        </Alert>
+                    )}
+                    {submitStatus === 'error' && (
+                        <Alert severity="error" sx={{ mb: 2 }}>
+                            Error {mode === "create" ? "creating" : "updating"} company. Please try again.
+                        </Alert>
+                    )}
 
                     <form onSubmit={formik.handleSubmit}>
                         <Grid container spacing={3}>
@@ -312,14 +385,14 @@ const CompanyForm = () => {
 
                             <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                                 <JobImageUpload
-                                    value={formik.values.companyLogo}   // File from formik
+                                    value={formik.values.companyLogo}
                                     onImageUpload={(file) => formik.setFieldValue("companyLogo", file)}
                                     error={formik.touched.companyLogo && Boolean(formik.errors.companyLogo)}
                                     helperText={formik.touched.companyLogo && formik.errors.companyLogo}
                                 />
-                                {formik.values.logo && (
+                                {formik.values.companyLogo && (
                                     <Typography variant="caption" color="success.main" sx={{ mt: 1, display: 'block' }}>
-                                        ✓ Image selected: {formik.values.logo.fileName || 'Binary data ready'}
+                                        ✓ Image selected: {formik.values.companyLogo.name || 'Binary data ready'}
                                     </Typography>
                                 )}
                             </Grid>
@@ -329,17 +402,31 @@ const CompanyForm = () => {
                                 <Box sx={{
                                     display: 'flex',
                                     justifyContent: 'flex-end',
+                                    gap: 2,
                                     mt: 3,
                                     pt: 2,
                                     borderTop: 1,
                                     borderColor: 'divider'
                                 }}>
                                     <Button
+                                        variant="outlined"
+                                        size="large"
+                                        onClick={() => router.push("/company")}
+                                        sx={{
+                                            minWidth: 120,
+                                            borderRadius: 2,
+                                            textTransform: 'none',
+                                            fontWeight: 600
+                                        }}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button
                                         type="submit"
                                         variant="contained"
                                         size="large"
                                         disabled={submitStatus === 'loading'}
-                                        startIcon={<Save />}
+                                        startIcon={mode === "edit" ? <Edit /> : <Save />}
                                         sx={{
                                             minWidth: 150,
                                             borderRadius: 2,
@@ -347,7 +434,10 @@ const CompanyForm = () => {
                                             fontWeight: 600
                                         }}
                                     >
-                                        {submitStatus === 'loading' ? 'Creating...' : 'Create Company'}
+                                        {submitStatus === 'loading'
+                                            ? (mode === "edit" ? 'Updating...' : 'Creating...')
+                                            : (mode === "edit" ? 'Update Company' : 'Create Company')
+                                        }
                                     </Button>
                                 </Box>
                             </Grid>

@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { createCompanyAsync, getAllCompanyAsync } from "./company.service";
+import { createCompanyAsync, getAllCompanyAsync, getCompanyByIdAsync, updateCompanyAsync } from "./company.service";
 
 export const getAllCompanyAction = createAsyncThunk("/company/get", (async (_, { rejectWithValue }) => {
     try {
@@ -19,3 +19,26 @@ export const createCompanyAction = createAsyncThunk("/company/post", (async (req
         return rejectWithValue(error)
     }
 }))
+
+
+export const getCompanyByIdAction = createAsyncThunk("/company/getById", (async (id, { rejectWithValue }) => {
+    try {
+        const response = await getCompanyByIdAsync(id)
+        return response
+    } catch (error) {
+        return rejectWithValue(error)
+    }
+}))
+
+export const updateCompanyAction = createAsyncThunk("/company/edit", (async ({ id, formData }, { rejectWithValue }) => {
+    try {
+        console.log("ID======>", id)
+        const response = await updateCompanyAsync({
+            id,
+            formData
+        })
+        return response
+    } catch (error) {
+        return rejectWithValue(error)
+    }
+})) 

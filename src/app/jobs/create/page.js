@@ -1,9 +1,11 @@
 "use client"
 import { jobValidationSchema } from '@/app/validationSchema/jobCreate.validation'
 import JobDropDown from '@/Common/JobDropDown'
+import JobHeader from '@/Common/JobHeader'
 import JobTextField from '@/Common/JobTextField'
 import { createJobAction } from '@/redux/jobs/jobs.middleware'
-import { Box, Button, Grid, TextareaAutosize, Typography } from '@mui/material'
+import { AttachMoney, BusinessCenterSharp, LocationCity, Person, Title, Work } from '@mui/icons-material'
+import { Box, Button, Grid, InputAdornment, TextareaAutosize, TextField, Typography } from '@mui/material'
 import { useFormik } from 'formik'
 import { useRouter } from 'next/navigation'
 import React from 'react'
@@ -28,6 +30,56 @@ const initialValues = {
     fixedSalary: '',
 };
 
+const fieldStyle = {
+    '& .MuiOutlinedInput-root': {
+        borderRadius: '12px',
+        transition: 'all 0.3s ease',
+        '&:hover fieldset': {
+            borderColor: '#6366f1',
+            borderWidth: '2px'
+        },
+        '&.Mui-focused fieldset': {
+            borderColor: '#6366f1',
+            borderWidth: '2px',
+            boxShadow: '0 0 0 3px rgba(99, 102, 241, 0.1)'
+        }
+    },
+    '& .MuiInputLabel-root.Mui-focused': {
+        color: '#6366f1'
+    }
+};
+
+const categoryOptions = [
+    { label: "Technology", value: "technology" },
+    { label: "Marketing", value: "marketing" },
+    { label: "Sales", value: "sales" },
+    { label: "Design", value: "design" },
+    { label: "Finance", value: "finance" },
+    { label: "Human Resources", value: "hr" },
+    { label: "Operations", value: "operations" },
+    { label: "Customer Service", value: "customer-service" }
+];
+
+
+const cityOptions = [
+    { label: "New York", value: "new-york" },
+    { label: "San Francisco", value: "san-francisco" },
+    { label: "Los Angeles", value: "los-angeles" },
+    { label: "Chicago", value: "chicago" },
+    { label: "Austin", value: "austin" },
+    { label: "Seattle", value: "seattle" },
+    { label: "Boston", value: "boston" },
+    { label: "Remote", value: "remote" }
+];
+
+const jobTypeOptions = [
+    { label: "Full-time", value: "full-time" },
+    { label: "Part-time", value: "part-time" },
+    { label: "Contract", value: "contract" },
+    { label: "Freelance", value: "freelance" },
+    { label: "Internship", value: "internship" }
+];
+
 
 const Create = () => {
     const dispatch = useDispatch()
@@ -47,70 +99,74 @@ const Create = () => {
     })
     return (
         <form onSubmit={handleSubmit}>
-            <Grid container spacing={2} >
-                <Grid size={{ xs: 12 }} textAlign={"center"}>
-                    <Typography variant='h3' mt={4}>CREATE A JOB</Typography>
+            <Grid container spacing={2} p={2} >
+                <Grid size={{ xs: 12 }} >
+                    <JobHeader title='Create a job' />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
                     <JobTextField
-                        label="Title"
+                        label="Job Title"
                         name="title"
                         value={values.title}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        size='small'
+                        startIcon={<Title />}
+                        styleVariant="modern"
+                        placeholder="e.g. Senior Software Engineer"
+                        required
                         error={Boolean(errors.title && touched.title)}
                         helperText={errors.title && touched.title ? errors.title : ""}
                     />
                 </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
+                <Grid size={{ xs: 12, md: 6 }}>
                     <JobTextField
-                        label="Category"
-                        name="category"
-                        value={values.category}
+                        label="Role"
+                        name="role"
+                        value={values.role}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        size='small'
-                        error={Boolean(errors.category && touched.category)}
-                        helperText={errors.category && touched.category ? errors.category : ""}
+                        startIcon={<Person />}
+                        styleVariant="modern"
+                        placeholder="e.g. Backend Developer"
+                        required
+                        error={Boolean(errors.role && touched.role)}
+                        helperText={errors.role && touched.role ? errors.role : ""}
                     />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
-                    <JobTextField
-                        label="Country"
-                        name="country"
-                        value={values.country}
+                    <JobDropDown
+                        label="Job Category"
+                        name="jobCategory"
+                        // value={formData.jobTitle}
                         onChange={handleChange}
-                        onBlur={handleBlur}
-                        size='small'
-                        error={Boolean(errors.country && touched.country)}
-                        helperText={errors.country && touched.country ? errors.country : ""}
+                        options={categoryOptions}
+                        placeholder="Select job title"
+                        startIcon={<Work />}
                     />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
-                    <JobTextField
+                    <JobDropDown
                         label="City"
                         name="city"
-                        value={values.city}
+                        // value={formData.jobTitle}
                         onChange={handleChange}
-                        onBlur={handleBlur}
-                        size='small'
-                        error={Boolean(errors.city && touched.city)}
-                        helperText={errors.city && touched.city ? errors.city : ""}
+                        options={cityOptions}
+                        placeholder="Select city option"
+                        startIcon={<LocationCity />}
                     />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
-                    <JobTextField
-                        label="location"
-                        name="location"
-                        value={values.location}
+                    <JobDropDown
+                        label="Job Type"
+                        name="jobType"
+                        // value={formData.jobTitle}
                         onChange={handleChange}
-                        onBlur={handleBlur}
-                        size='small'
-                        error={Boolean(errors.location && touched.location)}
-                        helperText={errors.location && touched.location ? errors.location : ""}
+                        options={jobTypeOptions}
+                        placeholder="Select Job Type option"
+                        startIcon={<BusinessCenterSharp />}
                     />
                 </Grid>
+
                 <Grid size={{ xs: 12, sm: 6 }}>
                     <TextareaAutosize
                         minRows={3}
@@ -129,15 +185,13 @@ const Create = () => {
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
                     <JobDropDown
-                        name="salaryType"
                         label="Salary Type"
-                        size="small"
-                        value={values.salaryType}
+                        name="salaryType"
+                        // value={formData.jobTitle}
                         onChange={handleChange}
-                        onBlur={handleBlur}
                         options={dropDownOption}
-                        error={Boolean(errors.salaryType && touched.salaryType)}
-                        helperText={touched.salaryType && errors.salaryType}
+                        placeholder="Select Salary Type option"
+                        startIcon={<AttachMoney />}
                     />
                 </Grid>
 
@@ -184,8 +238,34 @@ const Create = () => {
                     )}
 
                 </Grid>
-                <Grid size={{ xs: 12 }} display={"flex"} justifyContent={"center"} alignItems={"flex-end"}>
-                    <Button type="submit" variant='contained'>Submit</Button>
+                <Grid size={{ xs: 12 }} >
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 4 }}>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            size="large"
+                            sx={{
+                                background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                                borderRadius: '16px',
+                                // px: 6,
+                                // py: 2,
+                                fontSize: '18px',
+                                fontWeight: 'bold',
+                                textTransform: 'none',
+                                boxShadow: '0 10px 25px rgba(99, 102, 241, 0.3)',
+                                '&:hover': {
+                                    background: 'linear-gradient(135deg, #5b5bf6 0%, #7c3aed 100%)',
+                                    transform: 'translateY(-2px)',
+                                    boxShadow: '0 15px 35px rgba(99, 102, 241, 0.4)',
+                                },
+                                transition: 'all 0.3s ease'
+                            }}
+                        >
+                            <Work sx={{ mr: 1 }} />
+                            Create Job Posting
+                        </Button>
+                    </Box>
+
                 </Grid>
 
             </Grid>

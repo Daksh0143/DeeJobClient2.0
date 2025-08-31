@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import { deleteCompanyAction } from "@/redux/company/company.middleware";
+import { deleteCompanyAction, getAllCompanyAction } from "@/redux/company/company.middleware";
 
 const CompanyCard = ({ data }) => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -49,9 +49,9 @@ const CompanyCard = ({ data }) => {
 
 
     const handleDelete = () => {
-        console.log("SELEECTED", selectedItemId)
         if (selectedItemId !== null) {
             dispatch(deleteCompanyAction(selectedItemId))
+            dispatch(getAllCompanyAction());
         }
         handleMenuClose();
     };

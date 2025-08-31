@@ -10,24 +10,14 @@ import { companySelector } from '@/redux/company/company.slice'
 
 const Company = () => {
     const dispatch = useDispatch();
-    const [companyDetails, setCompanyDetails] = useState([])
     const { Company } = useSelector(companySelector)
 
-    console.log("COMPANY", Company)
 
     const router = useRouter()
 
     const fetchCompany = async () => {
         try {
             dispatch(getAllCompanyAction())
-            // .then((result) => {
-            //     console.log("result", result)
-            //     if (result.payload.status === 200) {
-            //         setCompanyDetails(result.payload.data)
-            //     }
-            // }).catch((err) => {
-            //     console.log("ERROR", err)
-            // });
         } catch (error) {
             console.log("error", error)
         }

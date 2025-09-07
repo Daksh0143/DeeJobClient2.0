@@ -11,7 +11,7 @@ const JobTextField = ({
     required = false,
     fullWidth = true,
     variant = 'outlined',
-    size = 'medium',
+    size = 'small',
     error,
     helperText,
     onBlur,

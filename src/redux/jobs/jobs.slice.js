@@ -43,9 +43,10 @@ const jobsSlice = createSlice({
                 state.isError = null;
             })
             .addCase(createJobAction.fulfilled, (state, action) => {
+
                 state.isLoading = false;
                 // Add the newly created job to the existing Jobs list
-                state.Jobs.push(action.payload);
+                state.Jobs.push(action.payload?.data);
             })
             .addCase(createJobAction.rejected, (state, action) => {
                 state.isLoading = false;

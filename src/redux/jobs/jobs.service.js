@@ -6,6 +6,7 @@ const getAllJobUrl = "job/getAll"
 const createJobUrl = "job/create"
 const findOneJobUrl = "job/findOne"
 const ownJobsUrl = "job/myJobs"
+const updateJobUrl = "job/update"
 
 export const getAllJobAsync = async (params) => {
     try {
@@ -37,7 +38,16 @@ export const findOneJobAsync = async (id) => {
 
 export const ownJobsAsync = async (params) => {
     try {
-        const response = await axiosInstanse.get(ownJobsUrl,{params})
+        const response = await axiosInstanse.get(ownJobsUrl, { params })
+        return response
+    } catch (error) {
+        return error
+    }
+}
+
+export const updateJobAsync = async ({ id, req }) => {
+    try {
+        const response = await axiosInstanse.put(`${updateJobUrl}/${id}`, req)
         return response
     } catch (error) {
         return error

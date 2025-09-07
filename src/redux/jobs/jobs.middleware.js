@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { createJobAsync, findOneJobAsync, getAllJobAsync, ownJobsAsync } from "./jobs.service";
+import { createJobAsync, findOneJobAsync, getAllJobAsync, ownJobsAsync, updateJobAsync } from "./jobs.service";
 import { responsiveFontSizes } from "@mui/material";
 
 export const getAllJobAction = createAsyncThunk("/job/getAll", async (params, { rejectWithValue }) => {
@@ -36,6 +36,16 @@ export const findOneJobAction = createAsyncThunk("/job/findOne", async (id, { re
 export const findOwnJobsAction = createAsyncThunk("/job/myJobs", async (params, { rejectWithValue }) => {
     try {
         const response = await ownJobsAsync(params)
+        return response
+    } catch (error) {
+        return rejectWithValue(error)
+    }
+})
+
+
+export const updateJobsAction = createAsyncThunk("/job/update", async ({ id, req }, { rejectWithValue }) => {
+    try {
+        const response = await updateJobAsync({ id, req })
         return response
     } catch (error) {
         return rejectWithValue(error)

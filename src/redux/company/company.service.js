@@ -2,7 +2,7 @@ import axiosInstanse from "../../axios"
 
 const getCompanyUrl = "company/get"
 const createCompanyUrl = "company/create"
-const getCompanyIdUrl = "company/companyById"
+const getLoggedInUserCompanyUrl = "company/getCompany"
 const editCompanyUrl = "company/edit"
 const deleteCompanyUrl = "company/delete"
 
@@ -31,7 +31,7 @@ export const createCompanyAsync = async (req) => {
 
 export const getCompanyByIdAsync = async (req) => {
     try {
-        const response = await axiosInstanse.get(`${getCompanyIdUrl}/${req}`)
+        const response = await axiosInstanse.get(getLoggedInUserCompanyUrl)
         console.log("response", response)
         return response.data
     } catch (error) {

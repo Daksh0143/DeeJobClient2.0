@@ -1,7 +1,8 @@
 'use client'
+import JobHeader from '@/Common/JobHeader'
 import { findOneJobAction } from '@/redux/jobs/jobs.middleware'
 import { Box, Button, Grid, Typography } from '@mui/material'
-import { useParams, useSearchParams } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -9,6 +10,9 @@ const JobDetails = () => {
     const params = useParams()
     const searchParams = useSearchParams()
     const action = searchParams.get('action')
+    const router = useRouter()
+
+    console.log("params", params)
 
     const dispatch = useDispatch()
     const [jobData, setJobData] = useState()
@@ -27,8 +31,14 @@ const JobDetails = () => {
 
     return (
         <Grid container spacing={2} >
-            <Grid size={{ xs: 12 }} >
-                <Typography textAlign={"center"} variant='h4'>Job Details</Typography>
+            <Grid size={{ xs: 12 }} p={2} display={"flex"} justifyContent={"space-between"}>
+                <JobHeader title={"Job Details"} />
+                <Button
+                    variant='contained'
+                    onClick={() => router.push(`/jobs/edit?id=${params.id}`)}
+                >
+                    Edit
+                </Button>
             </Grid>
             <Grid size={{ xs: 12 }} ml={3}>
                 <Typography variant='h6'> Title:-  <span style={{ fontSize: "18px", color: "blue" }}>{jobData?.title}</span> </Typography>

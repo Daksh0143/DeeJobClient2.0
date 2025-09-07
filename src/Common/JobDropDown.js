@@ -29,8 +29,8 @@ const StyledFormControl = styled(FormControl)(({ theme, error }) => ({
         },
         '&.Mui-focused': {
             backgroundColor: theme.palette.mode === 'light' ? '#ffffff' : '#2a2a2a',
-            boxShadow: error 
-                ? `0 0 0 3px ${theme.palette.error.main}20` 
+            boxShadow: error
+                ? `0 0 0 3px ${theme.palette.error.main}20`
                 : `0 0 0 3px ${theme.palette.primary.main}20`,
             '& .MuiOutlinedInput-notchedOutline': {
                 borderColor: error ? theme.palette.error.main : theme.palette.primary.main,
@@ -76,8 +76,8 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
     margin: '4px 8px',
     transition: 'all 0.2s ease',
     '&:hover': {
-        backgroundColor: theme.palette.mode === 'light' 
-            ? theme.palette.primary.main + '10' 
+        backgroundColor: theme.palette.mode === 'light'
+            ? theme.palette.primary.main + '10'
             : theme.palette.primary.main + '20',
         transform: 'translateX(4px)',
     },
@@ -121,7 +121,7 @@ const JobDropDown = ({
     options = [],
     placeholder = 'Select an option',
     fullWidth = true,
-    size = 'medium',
+    size = 'small',
     variant = 'outlined',
     error,
     helperText,
@@ -224,22 +224,21 @@ const JobDropDown = ({
                     <em>{placeholder}</em>
                 </StyledMenuItem>
                 {options.map((option) => {
-                    const isSelected = multiSelect 
+                    const isSelected = multiSelect
                         ? Array.isArray(value) && value.includes(option.value)
                         : value === option.value;
-                    
                     return (
-                        <StyledMenuItem key={option.value} value={option.value}>
-                            <Box sx={{ 
-                                display: 'flex', 
-                                alignItems: 'center', 
+                        <StyledMenuItem key={option.value} value={option.value || option._id}>
+                            <Box sx={{
+                                display: 'flex',
+                                alignItems: 'center',
                                 justifyContent: 'space-between',
                                 width: '100%'
                             }}>
-                                <span>{option.label}</span>
+                                <span>{option.label || option.name}</span>
                                 {showSelectedIcon && isSelected && (
-                                    <Check sx={{ 
-                                        fontSize: '16px', 
+                                    <Check sx={{
+                                        fontSize: '16px',
                                         color: 'primary.main',
                                         ml: 1
                                     }} />

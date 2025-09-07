@@ -21,9 +21,9 @@ export const createCompanyAction = createAsyncThunk("/company/post", (async (req
 }))
 
 
-export const getCompanyByIdAction = createAsyncThunk("/company/getById", (async (id, { rejectWithValue }) => {
+export const getCompanyByLoggedInUserAction = createAsyncThunk("/company/getById", (async (_, { rejectWithValue }) => {
     try {
-        const response = await getCompanyByIdAsync(id)
+        const response = await getCompanyByIdAsync()
         return response
     } catch (error) {
         return rejectWithValue(error)
